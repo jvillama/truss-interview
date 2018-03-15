@@ -82,16 +82,23 @@ def csv_reader(file_obj):
     return results
 
 if __name__ == '__main__':
-    args = sys.argv[1:][0]
-    if args:
+    args = sys.argv[1:]
+    if args and len(args) == 1:
         try:
-            # Read as utf-8, replacing errors with Unicode Replacement Character.
-            with open(args, 'r', encoding="utf-8", errors="replace") as f:
-                results = csv_reader(f)
-            new_file = 'cleaned-{}'.format(args)
-            csv_writer(new_file, results)
-        except Exception as e:
-            print("ERROR: " + str(e), file=sys.stderr)
+            csv_file = args[0]
+            if os.path.exists(csv_file):
+                # Read as utf-8, replacing errors with Unicode Replacement Character.
+                with open(args, 'r', encoding="utf-8", errors="replace") as f:
+                    csv_data = csv_reader(f)
+                    new_file = 'cleaned-{}'.format(csv_file)
+                    csv_writer(new_file, csv_data)
+            else:
+                print("{} doesn't exist. Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)".format(csv_file))
+        except IndexError:
+            print("Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)")    
+        except Exception as exc:
+            print("ERROR: " + str(exc), file=sys.stderr)
             raise
     else:
-        print("Please enter valid csv argument. (i.e. python3 csv.py sample.csv)")
+        print("Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)")
+
