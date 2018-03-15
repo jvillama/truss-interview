@@ -84,6 +84,7 @@ def csv_reader(file_obj):
     return results
 
 if __name__ == '__main__':
+    ARG_ERROR_MESSAGE = "Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)"
     args = sys.argv[1:]
     if args and len(args) == 1:
         try:
@@ -95,12 +96,11 @@ if __name__ == '__main__':
                     new_file = 'cleaned-{}'.format(csv_file)
                     csv_writer(new_file, csv_data)
             else:
-                print("{} doesn't exist. Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)".format(csv_file))
+                print("{} doesn't exist. {}".format(csv_file, ARG_ERROR_MESSAGE))
         except IndexError:
-            print("Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)")    
+            print(ARG_ERROR_MESSAGE)
         except Exception as exc:
             print("ERROR: " + str(exc), file=sys.stderr)
             raise
     else:
-        print("Please enter one valid csv argument. (i.e. python3 csv.py sample.csv)")
-
+        print(ARG_ERROR_MESSAGE)
