@@ -7,7 +7,9 @@ python csv_cleaner.py <filename>.csv
 ./csv_cleaner.py <filename>.csv
 '''
 
-import fileinput, sys, csv
+import os.path
+import sys
+import csv
 from datetime import datetime
 from pytz import timezone
 
@@ -17,18 +19,18 @@ def convert_to_secs(timer):
     """
     timer_split = timer.split(':')
     hour = float(timer_split[0]) * 3600
-    min = float(timer_split[1]) * 60
+    minute = float(timer_split[1]) * 60
     sec = float(timer_split[2])
-    return hour + min + sec
+    return hour + minute + sec
 
-def csv_writer(filename, results):
+def csv_writer(filename, data):
     """
     Write to csv file
     """
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        for row in results:
-            writer.writerow(row)    
+        for row in data:
+            writer.writerow(row)
 
 def csv_reader(file_obj):
     """
@@ -53,10 +55,10 @@ def csv_reader(file_obj):
                 address = row[1]
                 result.append(address)
             if row[2]:
-                zip = row[2]
-                if len(zip) < 5:
-                    zip = "0" * (5 - len(zip)) + zip
-                result.append(zip)
+                zip_codes = row[2]
+                if len(zip_codes) < 5:
+                    zip_codes = "0" * (5 - len(zip_codes)) + zip_codes
+                result.append(zip_codes)
             if row[3]:
                 name = row[3].upper()
                 result.append(name)
@@ -76,8 +78,8 @@ def csv_reader(file_obj):
             print(result)
             if result:
                 results.append(result)
-        except Exception as e:
-            print("WARNING: " + str(e) + ", skipping row", file=sys.stderr)
+        except Exception as exc:
+            print("WARNING: " + str(exc) + ", skipping row", file=sys.stderr)
             continue
     return results
 
